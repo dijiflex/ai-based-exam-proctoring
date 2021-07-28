@@ -116,7 +116,7 @@ export default function Admin() {
           </Box>
           <Box>
             <Typography variant="h5" noWrap>
-              AI Based Online Procoring
+              AI Based Exam Proctoring
             </Typography>
           </Box>
           <Box>
