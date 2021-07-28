@@ -5,12 +5,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import UseDashboard from './pages/userPage/UseDashboard';
 import Admin from './pages/adminPage/admin';
 import Homepage from './pages/homepage/Homepage';
-import { getCurrentUser } from './redux/userReducer';
+import { getCurrentUser, setUser } from './redux/userReducer';
 import ProtectedRoute from './Components/ProtectedRoute';
+import { auth, createUserProfileDocument } from './firebase/firebaseUtils';
 
 function App() {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const userRef = await createUserProfileDocument(user);
+        userRef.onSnapshot(snapshot => {
+          const doc = snapshot.data();
+          dispatch(
+            setUser({
+              id: snapshot.id,
+              email: doc.email,
+              fullName: doc.fullName,
+              photo: doc.photo,
+              phoneNumber: doc.phoneNumber,
+              referals: doc.referals,
+              username: doc.username,
+              profileStatus: doc.profileStatus
+            })
+          );
+        });
+      } else {
+        dispatch(setUser(null));
+      }
+    });
+    return unsubscribe;
+  }, [dispatch]);
   return (
     <Router>
       <Switch>

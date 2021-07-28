@@ -42,8 +42,9 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         email,
         createdAt,
         photo: photoURL,
-        requiredFields: [],
+        images: [],
         role: 'user',
+        trained: 'false',
         ...additionalData
       });
     } catch (error) {
@@ -65,8 +66,8 @@ export const getUserRef = async userAuth => {
 };
 
 export const getAllGroups = async () => {
-  const snapshot = db.collection('services').get();
-  return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  const snapshot = db.collection('personGroups').get();
+  return (await snapshot).docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 };
 
 export const getUserGroups = async id => {

@@ -1,15 +1,15 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-use-before-define */
 import { Button, makeStyles, Paper, Grid, Typography, List, ListItem, ListItemText } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 import { useForm, Form } from '../Controls/useForm';
-import db, { createUserGroups } from '../../firebase/firebaseUtils';
+import db, { createUserGroups, getAllGroups } from '../../firebase/firebaseUtils';
 import Controls from '../Controls/Controls';
 
 const initialFValues = {
-  groupName: 'felix'
+  groupName: ''
 };
 
 const useStyles = makeStyles(theme => ({
@@ -31,6 +31,10 @@ const useStyles = makeStyles(theme => ({
 
 const PersonGroup = () => {
   const classes = useStyles();
+  const [groups, setgroups] = useState([]);
+  useEffect(async () => {
+    setgroups(await getAllGroups());
+  }, []);
 
   const validate = (fieldValues = values) => {
     const temp = { ...errors };
@@ -48,9 +52,8 @@ const PersonGroup = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await createUserGroups(values);
-
-      console.log(res);
+      await createUserGroups(values);
+      setgroups(await getAllGroups());
     } catch (error) {
       console.log(error.response.data);
       // :TODO: Handle error
@@ -82,10 +85,12 @@ const PersonGroup = () => {
             All Groups
           </Typography>
           <div className={classes.demo}>
-            <List dense>
-              <ListItem>
-                <ListItemText primary="Single-line item" secondary="Felix" />
-              </ListItem>
+            <List>
+              {groups.map(group => (
+                <ListItem key={group.id}>
+                  <ListItemText primary={group.groupName} secondary={group.id} />
+                </ListItem>
+              ))}
             </List>
           </div>
         </Paper>
