@@ -19,6 +19,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LogOutMenu from '../../Components/LogoutMenu/LogOutMenu';
+import UserGroup from '../../Components/PersonGroup/PersonGroup';
 // import UpdateUserProfile from '../../components/updateUserProfile/UpdateUserProfile';
 
 const drawerWidth = 240;
@@ -72,29 +73,18 @@ export default function Admin() {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/pledge`} button>
+        <ListItem component={Link} onClick={handleDrawer} to={`${url}/userGroups`} button>
           <ListItemIcon>
             <MoneyOffIcon color="primary" />
           </ListItemIcon>
-          <ListItemText primary="Pledge" />
+          <ListItemText primary="User Groups" />
         </ListItem>
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/mypledges`} button>
-          <ListItemIcon>
-            <MonetizationOnIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="Shares" />
-        </ListItem>
+
         <ListItem component={Link} onClick={handleDrawer} to={`${url}/payers`} button>
           <ListItemIcon>
             <PeopleIcon color="primary" />
           </ListItemIcon>
-          <ListItemText primary="Payers" />
-        </ListItem>
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/referrals`} button>
-          <ListItemIcon>
-            <PeopleIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="Referrals" />
+          <ListItemText primary="Users" />
         </ListItem>
         <ListItem component={Link} onClick={handleDrawer} to={`${url}/profile`} button>
           <ListItemIcon>
@@ -126,7 +116,7 @@ export default function Admin() {
           </Box>
           <Box>
             <Typography variant="h5" noWrap>
-              IQ Donations
+              AI Based Online Procoring
             </Typography>
           </Box>
           <Box>
@@ -167,7 +157,7 @@ export default function Admin() {
           <Route exact path={path}>
             <h3>Dashboard still under development</h3>
           </Route>
-          {/* <Route exact path={`${path}/profile`} component={UpdateUserProfile} /> */}
+          <Route exact path={`${path}/userGroups`} component={UserGroup} />
           {/* <Route exact path={`${path}/pledge`} component={Pledge} />
           <Route exact path={`${path}/mypledges`} component={Shares} />
           <Route exact path={`${path}/referrals`} component={Rererrals} />

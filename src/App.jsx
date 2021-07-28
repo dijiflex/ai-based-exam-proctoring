@@ -14,11 +14,10 @@ function App() {
   return (
     <Router>
       <Switch>
-        {/* <Route exact path="/">
+        <Route exact path="/">
           {currentUser ? <Redirect to="/user" /> : <Homepage />}
-        </Route> */}
-        <Route exact path="/" component={Homepage} />
-        {/* <ProtectedRoute path="/user" component={UseDashboard} /> */}
+        </Route>
+        <ProtectedRoute path="/user" component={Admin} />
       </Switch>
     </Router>
   );
