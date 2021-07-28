@@ -1,8 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
+/* eslint-disable no-return-await */
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getAllUsers } from '../firebase/firebaseUtils';
 
 const initialState = {
-  currentUser: null
+  currentUser: null,
+  allUsers: {
+    data: [],
+    status: null,
+    error: null
+  }
 };
+
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async userId => {
+  return await getAllUsers(userId);
+});
 
 export const userSlice = createSlice({
   name: 'user',
@@ -13,6 +24,19 @@ export const userSlice = createSlice({
     },
     logoutUser: state => {
       state.currentUser = null;
+    }
+  },
+  extraReducers: {
+    [fetchUsers.pending]: state => {
+      state.allUsers.status = 'loading';
+    },
+    [fetchUsers.fulfilled]: (state, { payload }) => {
+      state.allUsers.status = 'success';
+      state.allUsers.data = payload;
+    },
+    [fetchUsers.rejected]: (state, { payload }) => {
+      state.allUsers.status = 'failed';
+      state.allUsers.error = payload;
     }
   }
 });

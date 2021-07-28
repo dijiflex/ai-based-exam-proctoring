@@ -14,13 +14,12 @@ import { Box, Container, Hidden, SwipeableDrawer } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PeopleIcon from '@material-ui/icons/People';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LogOutMenu from '../../Components/LogoutMenu/LogOutMenu';
 import UserGroup from '../../Components/PersonGroup/PersonGroup';
-// import UpdateUserProfile from '../../components/updateUserProfile/UpdateUserProfile';
+import AllUser from '../../Components/User/AllUser';
 
 const drawerWidth = 240;
 
@@ -80,7 +79,7 @@ export default function Admin() {
           <ListItemText primary="User Groups" />
         </ListItem>
 
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/payers`} button>
+        <ListItem component={Link} onClick={handleDrawer} to={`${url}/allUsers`} button>
           <ListItemIcon>
             <PeopleIcon color="primary" />
           </ListItemIcon>
@@ -158,10 +157,10 @@ export default function Admin() {
             <h3>Dashboard still under development</h3>
           </Route>
           <Route exact path={`${path}/userGroups`} component={UserGroup} />
-          {/* <Route exact path={`${path}/pledge`} component={Pledge} />
-          <Route exact path={`${path}/mypledges`} component={Shares} />
-          <Route exact path={`${path}/referrals`} component={Rererrals} />
-          <Route exact path={`${path}/payers`} component={Rererrals} /> */}
+          <Route exact path={`${path}/allUsers`} component={AllUser} />
+          {/* <Route exact path={`${path}/mypledges`} component={Shares} /> */}
+          {/* <Route exact path={`${path}/referrals`} component={Rererrals} /> */}
+          {/* <Route exact path={`${path}/payers`} component={Rererrals} /> */}
         </Switch>
       </Container>
     </div>
