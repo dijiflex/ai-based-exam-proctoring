@@ -56,6 +56,38 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+export const registerStudent = async values => {
+  try {
+    const personRes = await axios.post(
+      `${api.endpoint}/face/v1.0/persongroups/${values.personGroupId}/persons`,
+      {
+        name: values.fullName,
+        userData: values.email
+      },
+      {
+        headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+      }
+    );
+
+    const { personId } = personRes.data;
+    const res = await db.collection('users').add({
+      fullName: values.fullName,
+      personId,
+      groupId: values.personGroupId,
+      email: values.email,
+      createdAt: new Date().getTime(),
+      photo: '',
+      images: [],
+      role: 'user',
+      trained: 'false'
+    });
+
+    return res.id;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 export const getUserRef = async userAuth => {
   if (!userAuth) return;
 
@@ -70,9 +102,9 @@ export const getAllGroups = async () => {
   return (await snapshot).docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 };
 
-export const getUserGroups = async id => {
-  const snapshot = db.collection('services').get();
-  return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+export const getUserGroups = async () => {
+  const snapshot = db.collection('personGroups').get();
+  return (await snapshot).docs.map(doc => ({ ...doc.data() }));
 };
 
 export const createUserGroups = async values => {

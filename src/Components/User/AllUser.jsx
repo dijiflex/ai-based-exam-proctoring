@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, makeStyles, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { fetchUsers, getCurrentUser } from '../../redux/userReducer';
 import UseTable from '../Controls/UseTable';
+import Popup from '../Controls/Popup';
+import EditAgent from './RegisterStudent';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,6 +61,7 @@ const headCells = [
 ];
 
 const AllUser = () => {
+  const [openPopup, setOpenPopup] = useState(false);
   const currentUser = useSelector(getCurrentUser);
   const allUsers = useSelector(state => state.user.allUsers.data);
   const clasess = useStyles();
@@ -69,29 +72,38 @@ const AllUser = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
   return (
-    <Grid container spacing={1} direction="column">
-      <Grid item />
-      <Grid item>
-        <Paper className={clasess.root}>
-          <TblContainer>
-            <TblHead />
-            <TableBody>
-              {allUsers.map((share, i) => (
-                <TableRow key={share.id}>
-                  <TableCell>{i + 1}</TableCell>
-                  <TableCell>{share.fullName}</TableCell>
-                  <TableCell>{share.email}</TableCell>
-                  <TableCell>{share.role}</TableCell>
-                  <TableCell>{share.trained}</TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </TblContainer>
-          <TblPagination />
-        </Paper>
+    <>
+      <Grid container spacing={1} direction="column">
+        <Grid item>
+          <Button variant="contained" onClick={() => setOpenPopup(true)} color="primary">
+            Register Student
+          </Button>
+        </Grid>
+        <Grid item>
+          <Paper className={clasess.root}>
+            <TblContainer>
+              <TblHead />
+              <TableBody>
+                {allUsers.map((share, i) => (
+                  <TableRow key={share.id}>
+                    <TableCell>{i + 1}</TableCell>
+                    <TableCell>{share.fullName}</TableCell>
+                    <TableCell>{share.email}</TableCell>
+                    <TableCell>{share.role}</TableCell>
+                    <TableCell>{share.trained}</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </TblContainer>
+            <TblPagination />
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Edit Agent">
+        <EditAgent setOpenPopup={setOpenPopup} />
+      </Popup>
+    </>
   );
 };
 
