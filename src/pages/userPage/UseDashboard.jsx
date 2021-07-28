@@ -2,9 +2,9 @@
 import React from 'react';
 
 import { Container, Grid } from '@material-ui/core';
-import PersonGroup from './Components/PersonGroup/PersonGroup';
+import PersonGroup from '../../Components/PersonGroup/PersonGroup';
 
-import MainWebcam from './Components/Webcam/MainWebcam';
+import MainWebcam from '../../Components/Webcam/MainWebcam';
 
 const UseDashboard = () => {
   return (

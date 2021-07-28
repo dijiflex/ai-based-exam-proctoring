@@ -1,14 +1,26 @@
 import React, { useEffect } from 'react';
 
-import './App.css';
-
-import UseDashboard from './UseDashboard';
+import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import UseDashboard from './pages/userPage/UseDashboard';
+import Admin from './pages/adminPage/admin';
+import Homepage from './pages/homepage/Homepage';
+import { getCurrentUser } from './redux/userReducer';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 function App() {
+  const dispatch = useDispatch();
+  const currentUser = useSelector(getCurrentUser);
   return (
-    <div className="App">
-      <UseDashboard />
-    </div>
+    <Router>
+      <Switch>
+        {/* <Route exact path="/">
+          {currentUser ? <Redirect to="/user" /> : <Homepage />}
+        </Route> */}
+        <Route exact path="/" component={Homepage} />
+        {/* <ProtectedRoute path="/user" component={UseDashboard} /> */}
+      </Switch>
+    </Router>
   );
 }
 
