@@ -1,7 +1,11 @@
+/* eslint-disable consistent-return */
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
+import axios from 'axios';
+import { v4 as uuid } from 'uuid';
+import api from '../utils/apiKeys';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -60,37 +64,44 @@ export const getUserRef = async userAuth => {
   return userRef;
 };
 
-export const getAllServices = async () => {
+export const getAllGroups = async () => {
   const snapshot = db.collection('services').get();
   return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
-export const getAllMyJobs = async userId => {
-  const snapshot = db.collection('jobs').where('user.id', '==', `${userId}`).get();
+
+export const getUserGroups = async id => {
+  const snapshot = db.collection('services').get();
   return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-export const getAllAgents = async () => {
-  const verified = db.collection('users').where('role', '==', 'agent').get();
-  const pending = db.collection('users').where('role', '==', 'pendingAgent').get();
-  const [verifiedAgents, unverfiedAgents] = await Promise.all([verified, pending]);
+export const createUserGroups = async values => {
+  try {
+    const id = uuid();
+    const res = await axios.put(
+      `${api.endpoint}/face/v1.0/persongroups/${id}`,
+      {
+        name: values.groupName,
+        recognitionModel: 'recognition_04'
+      },
+      {
+        headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+      }
+    );
+    await db.collection('personGroups').add({
+      groupName: values.groupName,
+      id
+    });
 
-  const verifieddocs = verifiedAgents.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  const unverifieddocs = unverfiedAgents.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  return [...verifieddocs, ...unverifieddocs];
+    console.log(res.data);
+  } catch (error) {
+    return error.response.data;
+    // :TODO: Handle error
+  }
 };
 
 export const getAllUsers = async () => {
   const snapshot = db.collection('users').get();
   return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
-};
-
-export const getAllJobs = async () => {
-  const snapshot = db.collection('jobs').get();
-  return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
-};
-
-export const createTask = async () => {
-  return 1556654;
 };
 
 export default db;

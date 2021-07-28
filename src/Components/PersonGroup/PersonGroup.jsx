@@ -5,8 +5,7 @@ import React from 'react';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 import { useForm, Form } from '../Controls/useForm';
-import db from '../../firebase/firebaseUtils';
-import api from '../../utils/apiKeys';
+import db, { createUserGroups } from '../../firebase/firebaseUtils';
 import Controls from '../Controls/Controls';
 
 const initialFValues = {
@@ -24,6 +23,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(1),
       width: '100%'
     }
+  },
+  width: {
+    width: '100%'
   }
 }));
 
@@ -46,32 +48,18 @@ const PersonGroup = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const id = uuid();
-      const res = await axios.put(
-        `${api.endpoint}/face/v1.0/persongroups/${id}`,
-        {
-          name: values.groupName,
-          recognitionModel: 'recognition_04'
-        },
-        {
-          headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
-        }
-      );
-      await db.collection('personGroups').add({
-        groupName: values.groupName,
-        id
-      });
+      const res = await createUserGroups(values);
 
-      console.log(res.data);
+      console.log(res);
     } catch (error) {
       console.log(error.response.data);
       // :TODO: Handle error
     }
   };
   return (
-    <Paper className={classes.root} elevation={1}>
-      <Grid container spacing={1}>
-        <Grid item sm={12}>
+    <Grid container spacing={1} direction="column" alignItems="center">
+      <Grid item sm={12} md={6}>
+        <Paper className={classes.root} elevation={1}>
           <Form className={classes.form} autoComplete="off" onSubmit={handleSubmit}>
             <Controls.Input
               name="groupName"
@@ -86,8 +74,10 @@ const PersonGroup = () => {
               Register Group
             </Button>
           </Form>
-        </Grid>
-        <Grid item sm={12}>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} className={classes.width} md={12}>
+        <Paper className={classes.root} elevation={1}>
           <Typography variant="h6" className={classes.title}>
             All Groups
           </Typography>
@@ -98,9 +88,9 @@ const PersonGroup = () => {
               </ListItem>
             </List>
           </div>
-        </Grid>
+        </Paper>
       </Grid>
-    </Paper>
+    </Grid>
   );
 };
 
