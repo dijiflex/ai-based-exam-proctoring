@@ -84,8 +84,8 @@ const UseTable = (records, headCells) => {
       rowsPerPage={rowsPerPage}
       component="div"
       count={records.length}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
     />
   );
   function descendingComparator(a, b, orderBy) {
