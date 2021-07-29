@@ -50,14 +50,10 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     const createdAt = new Date().getTime();
 
     try {
-      await userRef.set({
-        fullName: displayName,
-        email,
+      await userRef.update({
         createdAt,
         photo: photoURL,
-        images: [],
         role: 'user',
-        trained: 'false',
         ...additionalData
       });
     } catch (error) {
@@ -97,7 +93,7 @@ export const registerStudent = async values => {
 
     return { user: res.id, personId, groupId: values.personGroupId };
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
   }
 };
 
@@ -138,7 +134,7 @@ export const createUserGroups = async values => {
       id
     });
 
-    console.log(res.data);
+    // console.log(res.data);
   } catch (error) {
     return error.response.data;
     // :TODO: Handle error
@@ -150,10 +146,22 @@ export const getAllUsers = async () => {
   return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+export const trainGroup = async groupId => {
+  console.log(`${api.endpoint}face/v1.0/persongroups/${groupId}/train`);
+  try {
+    await axios.post(
+      `${api.endpoint}face/v1.0/persongroups/${groupId}/train`,
+      {},
+      {
+        headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+      }
+    );
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
+
 export const addFaces = async (url, groupId, personId) => {
-  console.log(`the url is ${url}`);
-  console.log(`the group is ${groupId}`);
-  console.log(`the person is ${personId}`);
   await axios.post(
     `${api.endpoint}/face/v1.0/persongroups/${groupId}/persons/${personId}/persistedFaces`,
     {
@@ -168,6 +176,8 @@ export const addFaces = async (url, groupId, personId) => {
 export const deleteUser = async id => {
   const snapshot = await db.collection('users').doc(id).get();
   const user = await snapshot.data();
+
+  console.log(user);
   try {
     await axios.delete(`${api.endpoint}/face/v1.0/persongroups/${user.groupId}/persons/${user.personId}`, {
       headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
@@ -175,7 +185,20 @@ export const deleteUser = async id => {
 
     if (user.images > 0) {
       user.images.forEach(image => {
-        console.log('deleting file ');
+        // Create a reference to the file to delete
+        const desertRef = storage.child(`students/${image.name}`);
+
+        // Delete the file
+        desertRef
+          .delete()
+          .then(() => {
+            // File deleted successfully
+            console.log('the file hasd been deleted');
+          })
+          .catch(error => {
+            // Uh-oh, an error occurred!
+            console.log('Deletion failed');
+          });
       });
     }
 
@@ -187,12 +210,12 @@ export const deleteUser = async id => {
         console.log('deleted');
       })
       .catch(error => {
-        console.error('Error removing document: ', error);
+        // console.error('Error removing document: ', error);
       });
   } catch (error) {
     if (error.response) {
-      console.log(error.response.data);
-      console.log(error.response.status);
+      //   console.log(error.response.data);
+      //   console.log(error.response.status);
     }
   }
 };

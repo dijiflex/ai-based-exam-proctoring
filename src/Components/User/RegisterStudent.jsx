@@ -10,7 +10,7 @@ import { useForm, Form } from '../Controls/useForm';
 import Controls from '../Controls/Controls';
 import FileUploadInput from './FileUploadInput';
 
-import db, { getUserGroups, registerStudent } from '../../firebase/firebaseUtils';
+import db, { getUserGroups, registerStudent, trainGroup } from '../../firebase/firebaseUtils';
 import { fetchUsers } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
@@ -88,6 +88,8 @@ const RegisterStudet = ({ currentItem, setOpenPopup }) => {
   const handleFinish = async e => {
     e.preventDefault();
     dispatch(await fetchUsers());
+    console.log(newStudentId);
+    await trainGroup(newStudentId.groupId);
     setOpenPopup(false);
   };
 

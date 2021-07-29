@@ -28,7 +28,7 @@ const LogOutMenu = () => {
       await auth.signOut();
       history.push('/');
     } catch (error) {
-      console.log('Logout failed');
+      //   console.log('Logout failed');
     }
   };
   return (

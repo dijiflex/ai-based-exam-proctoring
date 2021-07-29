@@ -14,7 +14,7 @@ const UseDashboard = () => {
           <MainWebcam />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <PersonGroup />
+          this is the test page
         </Grid>
       </Grid>
     </Container>

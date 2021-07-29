@@ -7,6 +7,7 @@ import Admin from './pages/adminPage/admin';
 import Homepage from './pages/homepage/Homepage';
 import { getCurrentUser, setUser } from './redux/userReducer';
 import ProtectedRoute from './Components/ProtectedRoute';
+import UserPage from './pages/userPage/userPage';
 import { auth, createUserProfileDocument } from './firebase/firebaseUtils';
 
 function App() {
@@ -24,13 +25,7 @@ function App() {
           dispatch(
             setUser({
               id: snapshot.id,
-              email: doc.email,
-              fullName: doc.fullName,
-              photo: doc.photo,
-              phoneNumber: doc.phoneNumber,
-              referals: doc.referals,
-              username: doc.username,
-              profileStatus: doc.profileStatus
+              ...doc
             })
           );
         });
@@ -46,7 +41,8 @@ function App() {
         <Route exact path="/">
           {currentUser ? <Redirect to="/user" /> : <Homepage />}
         </Route>
-        <ProtectedRoute path="/user" component={Admin} />
+        <ProtectedRoute path="/admin" component={Admin} />
+        <ProtectedRoute path="/user" component={UserPage} />
       </Switch>
     </Router>
   );
