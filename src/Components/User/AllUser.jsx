@@ -100,7 +100,7 @@ const AllUser = () => {
           </Paper>
         </Grid>
       </Grid>
-      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Edit Agent">
+      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Add Student">
         <EditAgent setOpenPopup={setOpenPopup} />
       </Popup>
     </>
