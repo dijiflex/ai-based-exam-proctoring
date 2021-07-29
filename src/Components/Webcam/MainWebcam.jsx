@@ -4,28 +4,36 @@ import Webcam from 'react-webcam';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
+import { useSelector } from 'react-redux';
 import PersonGroup from '../PersonGroup/PersonGroup';
 import api from '../../utils/apiKeys';
+import { detectUser, verifyUser } from '../../firebase/firebaseUtils';
+import { getCurrentUser } from '../../redux/userReducer';
 
 const MainWebcam = () => {
+  const currentUser = useSelector(getCurrentUser);
   const webcamRef = useRef(null);
   const [imageData, setImageData] = useState(null);
 
   const sendData = async data => {
     const buff = Buffer.from(data.split(',')[1], 'base64');
-    const res = await axios.post(
-      `${api.endpoint}/face/v1.0/detect?
-          returnFaceLandmarks=false
-          &returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories
-          &recognitionModel=recognition_04
-          &faceIdTimeToLive=60`,
-      buff,
-      {
-        headers: { 'Content-Type': 'application/octet-stream', 'Ocp-Apim-Subscription-Key': api.key }
-      }
-    );
+    const res = await detectUser(buff);
+    // console.log(res);
+    if (res.length === 1) {
+      const faceData = {
+        faceId: res[0].faceId,
+        personId: currentUser.personId,
+        personGroupId: currentUser.groupId
+      };
 
-    console.log(res.data);
+      const verify = await verifyUser(faceData);
+
+      console.log(verify);
+    } else if (res.length > 1) {
+      console.log('Multiple faces detected');
+    } else {
+      console.log('No user Detected');
+    }
   };
   const capture = React.useCallback(async () => {
     const imageSrc = webcamRef.current.getScreenshot();

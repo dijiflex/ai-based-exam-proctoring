@@ -220,4 +220,23 @@ export const deleteUser = async id => {
   }
 };
 
+export const detectUser = async buff => {
+  const res = await axios.post(`${api.endpoint}/face/v1.0/detect?recognitionModel=recognition_04`, buff, {
+    headers: { 'Content-Type': 'application/octet-stream', 'Ocp-Apim-Subscription-Key': api.key }
+  });
+
+  return res.data;
+};
+
+export const verifyUser = async data => {
+  try {
+    const res = await axios.post(`${api.endpoint}/face/v1.0/verify`, data, {
+      headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+    });
+    return res.data;
+  } catch (error) {
+    // console.log(error.response.data);
+  }
+};
+
 export default db;
