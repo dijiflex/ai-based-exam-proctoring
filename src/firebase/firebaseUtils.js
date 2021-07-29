@@ -25,15 +25,28 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider);
 const db = firebaseApp.firestore();
 export const storage = firebaseApp.storage().ref();
 
+export const getUserByEmail = async email => {
+  const snapshot = db.collection('users').where('email', '==', `${email}`).get();
+  return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
-  const userRef = db.doc(`users/${userAuth.uid}`);
+  let userRef = db.doc(`users/${userAuth.uid}`);
+  const { email } = userAuth;
 
   const snapShot = await userRef.get();
 
+  // check if the email address is already in the database
+  const res = await getUserByEmail(email);
+  if (res.length > 0) {
+    userRef = db.doc(`users/${res[0].id}`);
+  } else {
+    return null;
+  }
+
   if (!snapShot.exists) {
-    const { displayName, email, photoURL } = userAuth;
+    const { displayName, photoURL } = userAuth;
     const createdAt = new Date().getTime();
 
     try {

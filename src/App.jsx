@@ -17,6 +17,8 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged(async user => {
       if (user) {
         const userRef = await createUserProfileDocument(user);
+
+        if (!userRef) return;
         userRef.onSnapshot(snapshot => {
           const doc = snapshot.data();
           dispatch(
