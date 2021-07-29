@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, makeStyles, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Button, IconButton, makeStyles, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { fetchUsers, getCurrentUser } from '../../redux/userReducer';
 import UseTable from '../Controls/UseTable';
 import Popup from '../Controls/Popup';
 import EditAgent from './RegisterStudent';
+import { deleteUser } from '../../firebase/firebaseUtils';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -71,6 +74,11 @@ const AllUser = () => {
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  const handleDeleteUser = async id => {
+    await deleteUser(id);
+    dispatch(fetchUsers());
+  };
   return (
     <>
       <Grid container spacing={1} direction="column">
@@ -91,7 +99,14 @@ const AllUser = () => {
                     <TableCell>{share.email}</TableCell>
                     <TableCell>{share.role}</TableCell>
                     <TableCell>{share.trained}</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell>
+                      <IconButton aria-label="" onClick={() => 'res'}>
+                        <EditIcon color="primary" />
+                      </IconButton>
+                      <IconButton aria-label="" onClick={() => handleDeleteUser(share.id)}>
+                        <DeleteIcon color="primary" />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

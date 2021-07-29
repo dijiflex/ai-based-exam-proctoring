@@ -11,6 +11,7 @@ import Controls from '../Controls/Controls';
 import FileUploadInput from './FileUploadInput';
 
 import db, { getUserGroups, registerStudent } from '../../firebase/firebaseUtils';
+import { fetchUsers } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 const RegisterStudet = ({ currentItem, setOpenPopup }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [userGroups, setuserGroups] = useState([]);
   useEffect(async () => {
     setuserGroups(await getUserGroups());
@@ -77,13 +79,15 @@ const RegisterStudet = ({ currentItem, setOpenPopup }) => {
   // Handle submitsta
   const handleRegister = async e => {
     e.preventDefault();
-    setShowForm1(false);
+
     const res = await registerStudent(values);
-    console.log(`the new user Id is ${res}`);
-    setnewStudentId(res);
+    await setnewStudentId(res);
+    setShowForm1(false);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async e => {
+    e.preventDefault();
+    dispatch(await fetchUsers());
     setOpenPopup(false);
   };
 

@@ -82,7 +82,7 @@ export const registerStudent = async values => {
       trained: 'false'
     });
 
-    return res.id;
+    return { user: res.id, personId, groupId: values.personGroupId };
   } catch (error) {
     console.log(error.message);
   }
@@ -135,6 +135,53 @@ export const createUserGroups = async values => {
 export const getAllUsers = async () => {
   const snapshot = db.collection('users').get();
   return (await snapshot).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addFaces = async (url, groupId, personId) => {
+  console.log(`the url is ${url}`);
+  console.log(`the group is ${groupId}`);
+  console.log(`the person is ${personId}`);
+  await axios.post(
+    `${api.endpoint}/face/v1.0/persongroups/${groupId}/persons/${personId}/persistedFaces`,
+    {
+      url
+    },
+    {
+      headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+    }
+  );
+};
+
+export const deleteUser = async id => {
+  const snapshot = await db.collection('users').doc(id).get();
+  const user = await snapshot.data();
+  try {
+    await axios.delete(`${api.endpoint}/face/v1.0/persongroups/${user.groupId}/persons/${user.personId}`, {
+      headers: { 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': api.key }
+    });
+
+    if (user.images > 0) {
+      user.images.forEach(image => {
+        console.log('deleting file ');
+      });
+    }
+
+    await db
+      .collection('users')
+      .doc(id)
+      .delete()
+      .then(() => {
+        console.log('deleted');
+      })
+      .catch(error => {
+        console.error('Error removing document: ', error);
+      });
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.data);
+      console.log(error.response.status);
+    }
+  }
 };
 
 export default db;
