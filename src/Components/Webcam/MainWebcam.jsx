@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -7,13 +7,17 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import PersonGroup from '../PersonGroup/PersonGroup';
 import api from '../../utils/apiKeys';
-import { detectUser, verifyUser } from '../../firebase/firebaseUtils';
+import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/firebaseUtils';
 import { getCurrentUser } from '../../redux/userReducer';
 
 const MainWebcam = () => {
   const currentUser = useSelector(getCurrentUser);
   const webcamRef = useRef(null);
   const [imageData, setImageData] = useState(null);
+
+  useEffect(async () => {
+    await detectAndVerifyUser();
+  }, []);
 
   const sendData = async data => {
     const buff = Buffer.from(data.split(',')[1], 'base64');

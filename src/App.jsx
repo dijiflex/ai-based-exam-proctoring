@@ -41,7 +41,7 @@ function App() {
         <Route exact path="/">
           {currentUser ? <Redirect to="/user" /> : <Homepage />}
         </Route>
-        <ProtectedRoute path="/admin" component={Admin} />
+        <ProtectedRoute path="/admin" userRole={['admin']} component={Admin} />
         <ProtectedRoute path="/user" component={UserPage} />
       </Switch>
     </Router>

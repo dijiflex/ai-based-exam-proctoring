@@ -239,4 +239,8 @@ export const verifyUser = async data => {
   }
 };
 
+export const detectAndVerifyUser = async buff => {
+  console.log('I am detecting and verifying the user after every 1 mins');
+};
+
 export default db;
