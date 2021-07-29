@@ -1,13 +1,18 @@
-import { Button } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import React from 'react';
-import { Link as RouterLink, useHistory, Route, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+
 import { signInWithGoogle } from '../../firebase/firebaseUtils';
 
-import { getCurrentUser } from '../../redux/userReducer';
+const useStyles = makeStyles(theme => ({
+  root: {
+    borderColor: '#fff',
+    margin: theme.spacing(1)
+  }
+}));
 
 const SignUp = () => {
-  const currentUser = useSelector(getCurrentUser);
+  const classes = useStyles();
 
   const history = useHistory();
   const signIn = async () => {
@@ -17,14 +22,15 @@ const SignUp = () => {
   return (
     <div>
       <Button
-        size="medium"
+        size="large"
+        className={classes.root}
         variant="outlined"
-        color="secondary"
+        style={{ color: '#fff' }}
         align="center"
         startIcon={<img src="/icons/google.svg" height="20px" alt="Login with Google" />}
         onClick={signIn}
       >
-        Sign In
+        Sign In With Google
       </Button>
     </div>
   );

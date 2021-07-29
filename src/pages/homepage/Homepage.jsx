@@ -7,7 +7,10 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh'
   },
   gbcolor: {
-    backgroundColor: '#63d7cb'
+    backgroundColor: '#3F51B5'
+  },
+  title: {
+    color: '#fff'
   }
 }));
 
@@ -18,7 +21,7 @@ const homepage = () => {
       <Container>
         <Grid className={classes.root} container direction="column" justifyContent="center" alignItems="center">
           <Grid item xs={12}>
-            <Typography variant="h2" color="initial">
+            <Typography className={classes.title} variant="h2">
               AI Based Exam Proctoring System
             </Typography>
           </Grid>
