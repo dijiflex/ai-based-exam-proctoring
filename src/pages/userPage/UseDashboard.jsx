@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 
 import { Container, Grid, makeStyles, Paper, Button, Typography } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
+import { getCurrentUser } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UseDashboard = () => {
+  const currentUser = useSelector(getCurrentUser);
   const classes = useStyles();
   const [exam, setExam] = useState(false);
   return (
@@ -30,13 +33,17 @@ const UseDashboard = () => {
             <Paper style={{ height: '89%' }} className={classes.root} elevation={1}>
               <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
                 <Grid item xs={12}>
-                  <Button variant="contained" color="primary" onClick={() => setExam(!exam)}>
-                    {exam ? 'End Exam' : 'Start Exam'}
-                  </Button>
+                  {!currentUser.identityStatus ? (
+                    'You cannot start Exam Beause Your Identity is Not Verified'
+                  ) : (
+                    <Button variant="contained" color="primary" onClick={() => setExam(!exam)}>
+                      {exam ? 'End Exam' : 'Start Exam'}
+                    </Button>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="h4" color="initial">
-                    Your are Cheating
+                    {currentUser.examStatus}
                   </Typography>
                 </Grid>
               </Grid>

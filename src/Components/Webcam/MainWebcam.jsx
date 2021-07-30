@@ -71,7 +71,7 @@ const MainWebcam = () => {
       />
       <br />
       <Button variant="contained" color="primary" onClick={capture}>
-        Verify Your Identify
+        {!currentUser.identityStatus ? 'Click Verify Your Identify' : 'Your are Verified 😉'}
       </Button>
     </div>
   );

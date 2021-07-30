@@ -25,7 +25,7 @@ function App() {
           dispatch(
             setUser({
               id: snapshot.id,
-              identifyStatus: 'Not Verified',
+              identityStatus: false,
               examStatus: '',
               ...doc
             })
