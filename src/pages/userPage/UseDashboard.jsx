@@ -6,7 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
-import { getCurrentUser, setIdentityStatus, updateProctoring, setExam } from '../../redux/userReducer';
+import {
+  getCurrentUser,
+  setIdentityStatus,
+  updateProctoring,
+  setExam,
+  setUserExamStatus
+} from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,7 +64,7 @@ const UseDashboard = () => {
                   )}
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h4" color="initial">
+                  <Typography variant="h5" color="initial">
                     {currentUser.examStatus}
                   </Typography>
                 </Grid>

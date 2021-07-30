@@ -35,6 +35,9 @@ export const userSlice = createSlice({
     },
     setExam: (state, action) => {
       state.examStatus = action.payload;
+    },
+    setUserExamStatus: (state, action) => {
+      state.currentUser.examStatus = action.payload;
     }
   },
   extraReducers: {
@@ -54,6 +57,7 @@ export const userSlice = createSlice({
 export const getCurrentUser = state => state.user.currentUser;
 
 // Action creators are generated for each case reducer function
-export const { setUser, logoutUser, setIdentityStatus, updateProctoring, setExam } = userSlice.actions;
+export const { setUser, logoutUser, setIdentityStatus, updateProctoring, setExam, setUserExamStatus } =
+  userSlice.actions;
 
 export default userSlice.reducer;

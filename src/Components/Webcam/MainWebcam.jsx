@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PersonGroup from '../PersonGroup/PersonGroup';
 import api from '../../utils/apiKeys';
 import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/firebaseUtils';
-import { getCurrentUser, setIdentityStatus, updateProctoring } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus, setUserExamStatus, updateProctoring } from '../../redux/userReducer';
 
 const videoConstraints = {
   width: 200,
@@ -19,38 +19,10 @@ const videoConstraints = {
 const MainWebcam = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
-  const proctoring = useSelector(state => state.user.proctoring);
   const exam = useSelector(state => state.user.examStatus);
   const webcamRef = useRef(null);
   const increment = useRef(null);
-
-  useEffect(async () => {
-    await detectAndVerifyUser();
-  }, []);
-  const startProctroring = () => {
-    if (exam && currentUser.identityStatus) {
-      increment.current = setInterval(() => {
-        console.log('the interval has been set');
-      }, 1000);
-    } else {
-      clearInterval(increment.current);
-    }
-  };
-
-  useEffect(() => {
-    startProctroring();
-    return () => {
-      clearInterval(increment.current);
-      dispatch(updateProctoring(false));
-    };
-  }, [exam]);
-  //   const handleStart = () => {
-  //     startProctroring();
-  //   };
-
-  //   const handleReset = () => {
-  //     clearInterval(increment.current);
-  //   };
+  const image = useRef(0);
 
   const sendData = async data => {
     const buff = Buffer.from(data.split(',')[1], 'base64');
@@ -66,12 +38,17 @@ const MainWebcam = () => {
       const verify = await verifyUser(faceData);
       if (verify.isIdentical) {
         await dispatch(setIdentityStatus(true));
+        dispatch(setUserExamStatus('All is Good 😊'));
+      } else {
+        dispatch(setUserExamStatus(`Your are not ${currentUser.fullName} 😡 `));
       }
 
       console.log(verify);
     } else if (res.length > 1) {
       console.log('Multiple faces detected');
+      dispatch(setUserExamStatus('Is someone helping you do the exam? 🤔'));
     } else {
+      dispatch(setUserExamStatus('We cannot see you 😉'));
       console.log('No user Detected');
     }
   };
@@ -79,6 +56,27 @@ const MainWebcam = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     await sendData(imageSrc);
   }, [webcamRef]);
+  useEffect(async () => {
+    await detectAndVerifyUser();
+  }, []);
+  const startProctroring = () => {
+    if (exam && currentUser.identityStatus) {
+      increment.current = setInterval(async () => {
+        await capture();
+      }, 1000);
+    } else {
+      clearInterval(increment.current);
+    }
+  };
+
+  useEffect(() => {
+    startProctroring();
+    return () => {
+      clearInterval(increment.current);
+      dispatch(updateProctoring(false));
+    };
+  }, [exam]);
+
   return (
     <div
       style={{
