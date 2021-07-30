@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-expressions */
 import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
@@ -18,12 +19,33 @@ const videoConstraints = {
 const MainWebcam = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
+  const proctoring = useSelector(state => state.user.proctoring);
   const webcamRef = useRef(null);
-  const [imageData, setImageData] = useState(null);
+  const increment = useRef(null);
 
   useEffect(async () => {
     await detectAndVerifyUser();
   }, []);
+  const startProctroring = () => {
+    if (proctoring) {
+      increment.current = setInterval(() => {
+        console.log('the interval has been set');
+      }, 1000);
+    } else {
+      clearInterval(increment.current);
+    }
+  };
+
+  useEffect(() => {
+    startProctroring();
+  }, [proctoring]);
+  const handleStart = () => {
+    startProctroring();
+  };
+
+  const handleReset = () => {
+    clearInterval(increment.current);
+  };
 
   const sendData = async data => {
     const buff = Buffer.from(data.split(',')[1], 'base64');

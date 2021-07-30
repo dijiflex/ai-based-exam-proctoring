@@ -21,14 +21,8 @@ const UseDashboard = () => {
   const currentUser = useSelector(getCurrentUser);
   const classes = useStyles();
   const [exam, setExam] = useState(false);
-  const [startProctoring, setstartProctoring] = useState(false);
 
   // create a time interval for every 30 seconds to verify the user identity
-  const startProctroring = () => {
-    const interval = setInterval(() => {
-      console.log('the interval has been set');
-    }, 1000);
-  };
 
   return (
     <Container>
