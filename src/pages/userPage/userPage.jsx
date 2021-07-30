@@ -14,9 +14,6 @@ import { Box, Container, Hidden, SwipeableDrawer } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import MoneyOffIcon from '@material-ui/icons/MoneyOff';
-import SettingsIcon from '@material-ui/icons/Settings';
 import LogOutMenu from '../../Components/LogoutMenu/LogOutMenu';
 import UseDashboard from './UseDashboard';
 
@@ -70,25 +67,6 @@ export default function UserPage() {
             <HomeIcon color="primary" />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/userGroups`} button>
-          <ListItemIcon>
-            <MoneyOffIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="User Groups" />
-        </ListItem>
-
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/allUsers`} button>
-          <ListItemIcon>
-            <PeopleIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="Users" />
-        </ListItem>
-        <ListItem component={Link} onClick={handleDrawer} to={`${url}/profile`} button>
-          <ListItemIcon>
-            <SettingsIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="Settings" />
         </ListItem>
       </List>
     </div>

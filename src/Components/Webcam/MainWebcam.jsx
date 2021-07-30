@@ -10,6 +10,11 @@ import api from '../../utils/apiKeys';
 import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/firebaseUtils';
 import { getCurrentUser } from '../../redux/userReducer';
 
+const videoConstraints = {
+  width: 0,
+  height: 0,
+  facingMode: 'user'
+};
 const MainWebcam = () => {
   const currentUser = useSelector(getCurrentUser);
   const webcamRef = useRef(null);
@@ -51,7 +56,10 @@ const MainWebcam = () => {
     >
       <Webcam
         screenshotFormat="image/JPEG"
+        onUserMediaError={err => console.log('Access to Camera Denied')}
+        onUserMedia={() => console.log('Access to Camera Granted')}
         ref={webcamRef}
+        videoConstraints={videoConstraints}
         style={{
           marginLeft: 'auto',
           marginRight: 'auto',
