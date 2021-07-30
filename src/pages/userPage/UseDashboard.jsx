@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import React, { useState } from 'react';
 
-import { Container, Grid, makeStyles, Paper, Button } from '@material-ui/core';
+import { Container, Grid, makeStyles, Paper, Button, Typography } from '@material-ui/core';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
@@ -28,9 +28,18 @@ const UseDashboard = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Paper style={{ height: '89%' }} className={classes.root} elevation={1}>
-              <Button variant="contained" color="primary" onClick={() => setExam(!exam)}>
-                {exam ? 'End Exam' : 'Start Exam'}
-              </Button>
+              <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
+                <Grid item xs={12}>
+                  <Button variant="contained" color="primary" onClick={() => setExam(!exam)}>
+                    {exam ? 'End Exam' : 'Start Exam'}
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h4" color="initial">
+                    Your are Cheating
+                  </Typography>
+                </Grid>
+              </Grid>
             </Paper>
           </Grid>
         </Grid>

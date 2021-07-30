@@ -11,8 +11,8 @@ import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/fire
 import { getCurrentUser } from '../../redux/userReducer';
 
 const videoConstraints = {
-  width: 0,
-  height: 0,
+  width: 200,
+  height: 200,
   facingMode: 'user'
 };
 const MainWebcam = () => {
@@ -70,8 +70,8 @@ const MainWebcam = () => {
         }}
       />
       <br />
-      <Button variant="contained" color="default" onClick={capture}>
-        Capture
+      <Button variant="contained" color="primary" onClick={capture}>
+        Verify Your Identify
       </Button>
     </div>
   );
