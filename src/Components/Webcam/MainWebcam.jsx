@@ -4,11 +4,11 @@ import Webcam from 'react-webcam';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PersonGroup from '../PersonGroup/PersonGroup';
 import api from '../../utils/apiKeys';
 import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/firebaseUtils';
-import { getCurrentUser } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus } from '../../redux/userReducer';
 
 const videoConstraints = {
   width: 200,
@@ -16,6 +16,7 @@ const videoConstraints = {
   facingMode: 'user'
 };
 const MainWebcam = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
   const webcamRef = useRef(null);
   const [imageData, setImageData] = useState(null);
@@ -36,6 +37,9 @@ const MainWebcam = () => {
       };
 
       const verify = await verifyUser(faceData);
+      if (verify.isIdentical) {
+        await dispatch(setIdentityStatus(true));
+      }
 
       console.log(verify);
     } else if (res.length > 1) {
@@ -71,7 +75,7 @@ const MainWebcam = () => {
       />
       <br />
       <Button variant="contained" color="primary" onClick={capture}>
-        {!currentUser.identityStatus ? 'Click Verify Your Identify' : 'Your are Verified 😉'}
+        {!currentUser.identityStatus ? 'Click Verify Your Identify' : 'Your are Verified  ✅  '}
       </Button>
     </div>
   );

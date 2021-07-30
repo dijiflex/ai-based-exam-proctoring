@@ -24,6 +24,9 @@ export const userSlice = createSlice({
     },
     logoutUser: state => {
       state.currentUser = null;
+    },
+    setIdentityStatus: (state, action) => {
+      state.currentUser.identityStatus = action.payload;
     }
   },
   extraReducers: {
@@ -43,6 +46,6 @@ export const userSlice = createSlice({
 export const getCurrentUser = state => state.user.currentUser;
 
 // Action creators are generated for each case reducer function
-export const { setUser, logoutUser } = userSlice.actions;
+export const { setUser, logoutUser, setIdentityStatus } = userSlice.actions;
 
 export default userSlice.reducer;

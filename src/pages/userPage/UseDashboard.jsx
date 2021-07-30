@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 
 import { Container, Grid, makeStyles, Paper, Button, Typography } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
-import { getCurrentUser } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UseDashboard = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
   const classes = useStyles();
   const [exam, setExam] = useState(false);
@@ -34,9 +35,20 @@ const UseDashboard = () => {
               <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
                 <Grid item xs={12}>
                   {!currentUser.identityStatus ? (
-                    'You cannot start Exam Beause Your Identity is Not Verified'
+                    <Typography variant="h4" style={{ color: 'red' }} align="center">
+                      You cannot start Exam because Your Identity is Not Verified 😢
+                    </Typography>
                   ) : (
-                    <Button variant="contained" color="primary" onClick={() => setExam(!exam)}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        setExam(!exam);
+                        if (exam) {
+                          dispatch(setIdentityStatus(false));
+                        }
+                      }}
+                    >
                       {exam ? 'End Exam' : 'Start Exam'}
                     </Button>
                   )}
