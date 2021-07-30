@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PersonGroup from '../PersonGroup/PersonGroup';
 import api from '../../utils/apiKeys';
 import { detectAndVerifyUser, detectUser, verifyUser } from '../../firebase/firebaseUtils';
-import { getCurrentUser, setIdentityStatus } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus, updateProctoring } from '../../redux/userReducer';
 
 const videoConstraints = {
   width: 200,
@@ -20,6 +20,7 @@ const MainWebcam = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
   const proctoring = useSelector(state => state.user.proctoring);
+  const exam = useSelector(state => state.user.examStatus);
   const webcamRef = useRef(null);
   const increment = useRef(null);
 
@@ -27,7 +28,7 @@ const MainWebcam = () => {
     await detectAndVerifyUser();
   }, []);
   const startProctroring = () => {
-    if (proctoring) {
+    if (exam && currentUser.identityStatus) {
       increment.current = setInterval(() => {
         console.log('the interval has been set');
       }, 1000);
@@ -38,8 +39,11 @@ const MainWebcam = () => {
 
   useEffect(() => {
     startProctroring();
-    return () => clearInterval(increment.current);
-  }, [proctoring]);
+    return () => {
+      clearInterval(increment.current);
+      dispatch(updateProctoring(false));
+    };
+  }, [exam]);
   //   const handleStart = () => {
   //     startProctroring();
   //   };

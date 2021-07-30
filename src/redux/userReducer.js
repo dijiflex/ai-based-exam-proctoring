@@ -9,7 +9,8 @@ const initialState = {
     status: null,
     error: null
   },
-  proctoring: false
+  proctoring: false,
+  examStatus: false
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async userId => {
@@ -29,8 +30,11 @@ export const userSlice = createSlice({
     setIdentityStatus: (state, action) => {
       state.currentUser.identityStatus = action.payload;
     },
-    updateProctoring: state => {
-      state.proctoring = !state.proctoring;
+    updateProctoring: (state, action) => {
+      state.proctoring = action.payload;
+    },
+    setExam: (state, action) => {
+      state.examStatus = action.payload;
     }
   },
   extraReducers: {
@@ -50,6 +54,6 @@ export const userSlice = createSlice({
 export const getCurrentUser = state => state.user.currentUser;
 
 // Action creators are generated for each case reducer function
-export const { setUser, logoutUser, setIdentityStatus, updateProctoring } = userSlice.actions;
+export const { setUser, logoutUser, setIdentityStatus, updateProctoring, setExam } = userSlice.actions;
 
 export default userSlice.reducer;

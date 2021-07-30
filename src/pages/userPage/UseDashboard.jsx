@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Container, Grid, makeStyles, Paper, Button, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
-import { getCurrentUser, setIdentityStatus, updateProctoring } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus, updateProctoring, setExam } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,8 +19,12 @@ const useStyles = makeStyles(theme => ({
 const UseDashboard = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
+  const exam = useSelector(state => state.user.examStatus);
   const classes = useStyles();
-  const [exam, setExam] = useState(false);
+
+  useEffect(() => {
+    // return () => dispatch(setExam(false));
+  }, [exam]);
 
   // create a time interval for every 30 seconds to verify the user identity
 
@@ -46,11 +50,7 @@ const UseDashboard = () => {
                       variant="contained"
                       color="primary"
                       onClick={() => {
-                        setExam(!exam);
-                        dispatch(updateProctoring());
-                        if (exam) {
-                          dispatch(setIdentityStatus(false));
-                        }
+                        dispatch(setExam(!exam));
                       }}
                     >
                       {exam ? 'End Exam' : 'Start Exam'}
@@ -68,7 +68,7 @@ const UseDashboard = () => {
         </Grid>
         <Grid container spacing={1} justifyContent="center">
           <Grid item xs={12} sm={7}>
-            {exam ? <Pdf /> : null}
+            {exam && currentUser.identityStatus ? <Pdf /> : null}
           </Grid>
         </Grid>
       </Grid>
