@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Pdf from '../../Components/pdfViewer/Pdf';
 
 import MainWebcam from '../../Components/Webcam/MainWebcam';
-import { getCurrentUser, setIdentityStatus } from '../../redux/userReducer';
+import { getCurrentUser, setIdentityStatus, updateProctoring } from '../../redux/userReducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +21,15 @@ const UseDashboard = () => {
   const currentUser = useSelector(getCurrentUser);
   const classes = useStyles();
   const [exam, setExam] = useState(false);
+  const [startProctoring, setstartProctoring] = useState(false);
+
+  // create a time interval for every 30 seconds to verify the user identity
+  const startProctroring = () => {
+    const interval = setInterval(() => {
+      console.log('the interval has been set');
+    }, 1000);
+  };
+
   return (
     <Container>
       <Grid container spacing={1}>
@@ -44,6 +53,7 @@ const UseDashboard = () => {
                       color="primary"
                       onClick={() => {
                         setExam(!exam);
+                        dispatch(updateProctoring());
                         if (exam) {
                           dispatch(setIdentityStatus(false));
                         }

@@ -8,7 +8,8 @@ const initialState = {
     data: [],
     status: null,
     error: null
-  }
+  },
+  proctoring: false
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async userId => {
@@ -27,6 +28,9 @@ export const userSlice = createSlice({
     },
     setIdentityStatus: (state, action) => {
       state.currentUser.identityStatus = action.payload;
+    },
+    updateProctoring: state => {
+      state.proctoring = !state.proctoring;
     }
   },
   extraReducers: {
@@ -46,6 +50,6 @@ export const userSlice = createSlice({
 export const getCurrentUser = state => state.user.currentUser;
 
 // Action creators are generated for each case reducer function
-export const { setUser, logoutUser, setIdentityStatus } = userSlice.actions;
+export const { setUser, logoutUser, setIdentityStatus, updateProctoring } = userSlice.actions;
 
 export default userSlice.reducer;
