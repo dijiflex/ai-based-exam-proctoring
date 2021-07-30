@@ -38,14 +38,15 @@ const MainWebcam = () => {
 
   useEffect(() => {
     startProctroring();
+    return () => clearInterval(increment.current);
   }, [proctoring]);
-  const handleStart = () => {
-    startProctroring();
-  };
+  //   const handleStart = () => {
+  //     startProctroring();
+  //   };
 
-  const handleReset = () => {
-    clearInterval(increment.current);
-  };
+  //   const handleReset = () => {
+  //     clearInterval(increment.current);
+  //   };
 
   const sendData = async data => {
     const buff = Buffer.from(data.split(',')[1], 'base64');
