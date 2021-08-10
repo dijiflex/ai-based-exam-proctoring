@@ -147,7 +147,6 @@ export const getAllUsers = async () => {
 };
 
 export const trainGroup = async groupId => {
-  console.log(`${api.endpoint}face/v1.0/persongroups/${groupId}/train`);
   try {
     await axios.post(
       `${api.endpoint}face/v1.0/persongroups/${groupId}/train`,
